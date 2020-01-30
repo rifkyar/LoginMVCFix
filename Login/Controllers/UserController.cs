@@ -110,13 +110,15 @@ namespace Login.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
-            var login = myContext.Users.Find(user.Email);
-            if (login != null && BCrypt.Net.BCrypt.Verify(user.Password, login.Password))
+            var log = myContext.Users.FirstOrDefault(e => e.Email.Equals(user.Email));
+            bool tes = Hash.ValidatePassword(user.Password, log.Password);
+            if (tes == true)
             {
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("Index");
             }
-            else {
-                return RedirectToAction("Login", "Login");
+            else
+            {
+                return RedirectToAction("Login");
             }
         }
         public ActionResult Logout()
